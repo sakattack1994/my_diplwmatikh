@@ -1,14 +1,12 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-
 var exhibit = require('../models/scrabble_museum_models/exhibit');
 var woa = require('../models/scrabble_museum_models/workofart');
 var default_keys=require('../models/scrabble_museum_models/Keys');
 var key_states = require('../models/scrabble_museum_models/keys_state');
 var session= require('../models/Session');
 var player=require('../models/Player');
-var Verify = require('./verify');
 
 var dbrouter = express.Router();
 dbrouter.use(bodyParser.json());
@@ -136,35 +134,5 @@ dbrouter.route('/Session/theme_select')
             res.json(exhibit);
         });
     });
-
-//Join session of a player
-dbrouter.route('/Join_Session/:sessionId')
-    .post(function (req, res, next) {
-        session.findOne({"session_id":req.params.sessionId}, function (err, this_session) {
-            if (err) throw err;
-            if(req.body.password===this_session.password) {
-                if (this_session.max_players > this_session.participants.length){
-                    player.update({"username": req.body.username}, {
-                        $set: {"session_id": req.params.sessionId}
-                    }, function (err, state) {
-                        if (err) throw err;
-                    });
-                    session.update({"session_id": req.params.sessionId}, {
-                        $addToSet: {"participants": req.body.username}
-                    }, function (err, state) {
-                        if (err) throw err;
-                    });
-                    res.end(req.body.username + " joined session " + req.params.sessionId);
-                }
-                else{
-                    res.end("This session is full you can't enter.");
-                }
-            }
-            else{
-                res.end("Wrong password, you can't enter that session.");
-            }
-        });
-    });
-
 
 module.exports = dbrouter;

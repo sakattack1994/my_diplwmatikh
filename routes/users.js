@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var User = require('../models/Player');
-var Verify    = require('./verify');
+var Verify  = require('./verify_player');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -15,14 +15,14 @@ router.post('/register', function(req, res) {
         if (err) {
           return res.status(500).json({err: err});
         }
-        passport.authenticate('local')(req, res, function () {
+        passport.authenticate('user_auth')(req, res, function () {
           return res.status(200).json({status: 'Registration Successful!'});
         });
       });
 });
 
 router.post('/login', function(req, res, next) {
-  passport.authenticate('local', function(err, user, info) {
+  passport.authenticate('user_auth', function(err, user, info) {
     if (err) {
       return next(err);
     }

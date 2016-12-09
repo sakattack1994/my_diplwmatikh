@@ -10,8 +10,7 @@ var sessionSchema = new Schema({
     },
     password:  {
         type: String,
-        required: false,
-        default:""
+        required:true
     },
     participants:  {
         type: Array,
@@ -28,10 +27,17 @@ var sessionSchema = new Schema({
     actions:  {
         type: Array,
         required: false
+    },
+    admin_username:{
+        type: String,
+        required: false
+    },
+    admin_password:{
+        type: String,
+        required: false
     }
 }, { collection: 'Session'}, {
     timestamps: true
 });
-
 var session = mongoose.model('Session', sessionSchema);
 module.exports = session;
