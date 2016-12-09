@@ -9,21 +9,35 @@ var config = require('./config');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
+/**
+ * Ορίζω τα collections της βάσης δεδομένων μου για να μπορώ να τα χρησιμοποιήσω
+ * @type {Exhibit|exports,woa|exports,keys|exports,Key_State|exports,}
+ */
 var exhibit = require('./models/scrabble_museum_models/exhibit');
 var woa = require('./models/scrabble_museum_models/workofart');
 var default_keys=require('./models/scrabble_museum_models/Keys');
-var fs = require('fs');
+var key_states = require('./models/scrabble_museum_models/keys_state');
+var fs = require('fs');             //για να διαβαζω τα αρχεία που περιέχουν τη βάση δεδομένων του παιχνιδιου
 
+/**
+ * όλα τα scripts που θα εισάγω στη βάση δεδομένων μου
+ */
 var json1 = fs.readFileSync('./public/db_scripts/Scrabble/exhibits.json', 'utf-8');
 var json2 = fs.readFileSync('./public/db_scripts/Scrabble/woa.json', 'utf-8');
 var json3 = fs.readFileSync('./public/db_scripts/Scrabble/Keys.json', 'utf-8');
 
+/**
+ * συνδέομαι στη βάση δεδομένων
+ */
 mongoose.connect(config.mongoUrl);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
   console.log("Server started successfully.\nConnected to database.");
   exhibit.count(function (err, count) {
+    /**
+     * ελέγχω αν η βάση μου περιέχει ήδη δεδομένα ώστε να μην χρειαστεί να τα ξαναγράψω
+     */
     if (!err && count === 0) {
       exhibit.create(JSON.parse(json1), function (err, y) {
         if (err) throw err;
@@ -45,7 +59,10 @@ db.once('open', function () {
     }
   });
 });
-
+/**
+ * The routes that are included to the server
+ * @type {router|exports}
+ */
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var sessions = require('./routes/sessions');
@@ -73,7 +90,9 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use(express.static(path.join(__dirname, 'public')));
-
+/**
+ * We name the routes that the users can have access
+ */
 app.use('/', routes);
 app.use('/users', users);
 app.use('/sessions', sessions);

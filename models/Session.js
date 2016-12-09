@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 //Session Schema
 var sessionSchema = new Schema({
-    session_id:  {
+    session_name:  {
         type: String,
         required: true,
         unique:true

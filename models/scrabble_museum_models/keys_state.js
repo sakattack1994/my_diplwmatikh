@@ -1,12 +1,11 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-// create a schema
+// create a key state schema
 var key_state_schema = new Schema({
     key_id: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     state: {
         type: Boolean,
@@ -19,7 +18,11 @@ var key_state_schema = new Schema({
     player_id:{
         type: String,
         required: false
-    }
+    },
+        session_id:{
+            type: String,
+            required: false
+        }
 }, { collection: 'Key_State'},
     {
     timestamps: true

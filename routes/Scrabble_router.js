@@ -11,34 +11,6 @@ var player=require('../models/Player');
 var dbrouter = express.Router();
 dbrouter.use(bodyParser.json());
 
-// LOAD OF WHOLE DATABASE
-dbrouter.route('/Create_Session/:sessionId')
-    .post(function (req, res, next) {
-        var fs = require('fs');
-        var json1 = fs.readFileSync('./public/db_scripts/Scrabble/exhibits.json', 'utf-8');
-        var json2 = fs.readFileSync('./public/db_scripts/Scrabble/woa.json', 'utf-8');
-        var json3 = fs.readFileSync('./public/db_scripts/Scrabble/default_state_keys.json', 'utf-8');
-        var json4 = fs.readFileSync('./public/db_scripts/Scrabble/Keys.json', 'utf-8');
-        exhibit.create(JSON.parse(json1), function (err, y) {
-            if (err) throw err;
-        });
-        woa.create(JSON.parse(json2), function (err, y) {
-            if (err) throw err;
-        });
-        key_states.create(JSON.parse(json3), function (err, y) {
-            if (err) throw err;
-        });
-        default_keys.create(JSON.parse(json4), function (err, y) {
-            if (err) throw err;
-        });
-        session.create({"session_id":req.params.sessionId,"password":req.body.password,"max_players":req.body.max_players}, function (err, y) {
-            if (err) throw err;
-
-        });
-        res.write('Creating session.... \nPlease wait\n');
-        res.end('Session created succesfully');
-    });
-
 //SCAN OF EXHIBIT
 dbrouter.route('/Session/scan')
     .post(function (req, res, next) {

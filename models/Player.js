@@ -24,7 +24,11 @@ var playerSchema = new Schema({
             type: Boolean,
             default: false
         },
-        session_id:{
+        session_name:{
+            type: String,
+            required: false
+        },
+        token:{
             type: String,
             required: false
         }
